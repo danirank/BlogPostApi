@@ -22,7 +22,7 @@ Projektet är byggt för att vara lätt att vidareutveckla och följa bra praxis
 
 ## 🧱 Teknikstack
 
-- **.NET 10 / ASP.NET Core Web API**
+- **.NET 10 / ASP.NET Core Web API, Controllers**
 - **Entity Framework Core**
 - **SQL Server**
 - **JWT Bearer Authentication**
