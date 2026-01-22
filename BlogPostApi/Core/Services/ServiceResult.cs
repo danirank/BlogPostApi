@@ -11,6 +11,8 @@
             Success = true,
             Data = data
         };
+
+
         public static ServiceResult<T> Fail(IEnumerable<string> errors) => new()
         {
             Success = false,

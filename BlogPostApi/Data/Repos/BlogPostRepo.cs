@@ -1,7 +1,6 @@
-﻿
-
-using BlogPostApi.Data.Entities;
+﻿using BlogPostApi.Data.Entities;
 using BlogPostApi.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogPostApi.Data.Repos
 {
@@ -17,7 +16,7 @@ namespace BlogPostApi.Data.Repos
         public async Task<BlogPost> AddPostAsync(BlogPost post)
         {
 
-            var result = await _dbContext.AddAsync(post);
+            var result = await _dbContext.BlogPosts.AddAsync(post);
 
             await _dbContext.SaveChangesAsync();
 
@@ -25,19 +24,40 @@ namespace BlogPostApi.Data.Repos
 
         }
 
+        public async Task<bool> CategoryExists(int categoryId)
+        {
+            return await _dbContext.Categories.AnyAsync(c => c.CategoryId == categoryId);
+        }
+
         public Task<bool> DeletePostAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<BlogPost>> GetAllPostsAsync()
+        public async Task<List<BlogPost>> GetAllPostsAsync()
         {
-            throw new NotImplementedException();
+            var posts = await _dbContext.BlogPosts
+                .Include(p => p.Category)
+                .Include(p => p.User)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return posts;
+
         }
 
-        public Task<bool> UpdatePostAsync(int id, BlogPost post)
+        public async Task<BlogPost?> GetPostByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.BlogPosts.Include(c => c.Category)
+                .FirstOrDefaultAsync(p => p.BlogPostId == id);
         }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
+
+
+
     }
 }

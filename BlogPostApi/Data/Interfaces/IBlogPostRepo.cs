@@ -6,17 +6,17 @@ namespace BlogPostApi.Data.Interfaces
     {
 
 
-        Task<IEnumerable<BlogPost>> GetAllPostsAsync();
+        Task<List<BlogPost>> GetAllPostsAsync();
         Task<BlogPost> AddPostAsync(BlogPost post);
 
         Task<bool> DeletePostAsync(int id);
 
 
-        Task<bool> UpdatePostAsync(int id, BlogPost post);
+        Task<BlogPost?> GetPostByIdAsync(int id);
 
+        Task<bool> CategoryExists(int categoryId);
 
-
-
+        Task<int> SaveChangesAsync();
 
     }
 }

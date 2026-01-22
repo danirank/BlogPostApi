@@ -19,6 +19,20 @@ namespace BlogPostApi.Controllers
             _service = service;
         }
 
+        #region
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _service.GetAllPostsAsync();
+
+            return Ok(result);
+        }
+
+        #endregion
+
+
+        #region AddBlogPost
+
         [Authorize]
         [HttpPost]
         [SwaggerOperation(
@@ -43,6 +57,32 @@ namespace BlogPostApi.Controllers
             return StatusCode(StatusCodes.Status201Created, result.Data);
         }
 
+        #endregion
+
+
+        #region Update
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdatePost([FromBody] BlogPostUpdateDto dto, int blogPostId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userId))
+                return Unauthorized();
+
+
+
+            var result = await _service.UpdatePostAsync(dto, blogPostId, userId);
+
+            if (!result.Success)
+                return BadRequest(result.ErrorMessages);
+
+            return Ok(result);
+        }
+
+
+        #endregion
 
     }
 }
