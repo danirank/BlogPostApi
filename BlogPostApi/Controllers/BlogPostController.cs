@@ -21,9 +21,13 @@ namespace BlogPostApi.Controllers
 
         #region GetBlogposts
         [HttpGet]
+
+        #region Doc
+
         [SwaggerOperation(Summary = "Returns Blogpost in db",
             Description = "Search by Title or Category (Both optional)")]
         [ProducesResponseType(typeof(BlogPostsGetDto), StatusCodes.Status200OK)]
+        #endregion
         public async Task<IActionResult> GetPosts([FromQuery] BlogPostSearchFilterDto filter)
         {
             var result = await _service.GetPostsAsync(filter);
@@ -36,9 +40,12 @@ namespace BlogPostApi.Controllers
 
         #region GetBlogPost
         [HttpGet("{id}")]
+
+        #region Doc
         [SwaggerOperation(Summary = "Returns a detailed blogpost",
             Description = "Search bi Blogpost id")]
         [ProducesResponseType(typeof(BlogPostsGetDto), StatusCodes.Status200OK)]
+        #endregion
         public async Task<IActionResult> GetBlogPost(int id)
         {
             var result = await _service.GetDetailedPostAsync(id);
@@ -53,6 +60,8 @@ namespace BlogPostApi.Controllers
 
         [Authorize]
         [HttpPost]
+
+        #region Doc
         [SwaggerOperation(
             Summary = "Create a new blog post.",
             Description = "You have to be logged in to use this endpoint. " +
@@ -61,6 +70,7 @@ namespace BlogPostApi.Controllers
         [ProducesResponseType(typeof(BlogPostAddResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, Description = "Check input")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Description = "Not Authorized")]
+        #endregion
         public async Task<IActionResult> AddBlogPost([FromBody] BlogPostAddDto dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -83,6 +93,9 @@ namespace BlogPostApi.Controllers
 
         [Authorize]
         [HttpPut]
+        #region Doc
+
+
         [SwaggerOperation(
             Summary = "Update a blogpost",
             Description = "Only authorized user can acces this endpoint. " +
@@ -92,6 +105,7 @@ namespace BlogPostApi.Controllers
         [ProducesResponseType(typeof(BlogPostUpdateResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(UnauthorizedAccessException), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        #endregion
         public async Task<IActionResult> UpdatePost([FromBody] BlogPostUpdateDto dto, int blogPostId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -112,6 +126,34 @@ namespace BlogPostApi.Controllers
 
         #endregion
 
+        #region DeletePost
+
+        [Authorize]
+        [HttpDelete("{id}")]
+
+        #region Doc 
+
+        [SwaggerOperation(
+            Summary = "Delete a blogpost",
+            Description = "Only authorized user can acces this endpoint. " +
+            "Only user who created the post can delete it."
+            )]
+        [ProducesResponseType(typeof(BlogPostUpdateResponseDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(UnauthorizedAccessException), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+
+        #endregion
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
+
+            var result = await _service.DeletePostAsync(postId, userId);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        #endregion
 
 
     }

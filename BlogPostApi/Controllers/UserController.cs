@@ -20,12 +20,14 @@ namespace BlogPostApi.Controllers
         #region Register
 
         [HttpPost]
+        #region Doc
         [SwaggerOperation(
             Summary = "Register a new user",
             Description = "Email, UserName and password are required, First name and last name are optional"
             )]
         [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status201Created, Description = "User created succesfully")]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, Description = "Validation/Error")]
+        #endregion
 
         public async Task<IActionResult> Register(RegisterUserDto dto)
         {
@@ -47,6 +49,7 @@ namespace BlogPostApi.Controllers
         #region Update
 
         [HttpPut("{id}")]
+        #region Doc
         [SwaggerOperation(
             Summary = "Update user by id (string)",
             Description = "All fields are optional, (FirstName, LastName, Email, UserName, Password)"
@@ -54,6 +57,7 @@ namespace BlogPostApi.Controllers
             )]
         [ProducesResponseType(typeof(ServiceResult<UserResponseDto>), StatusCodes.Status200OK, Description = "User updated succesfully")]
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest, Description = "Error / Bad request")]
+        #endregion
 
         public async Task<IActionResult> Update(string id, UpdateUserDto dto)
         {
@@ -72,7 +76,10 @@ namespace BlogPostApi.Controllers
 
 
         #region Delete
+
         [HttpDelete("{id}")]
+
+        #region Doc
         [SwaggerOperation(
             Summary = "Delete user by id (string)",
             Description = "Deletes a user. Use an Id "
@@ -80,6 +87,7 @@ namespace BlogPostApi.Controllers
             )]
         [ProducesResponseType(StatusCodes.Status204NoContent, Description = "User deleted succesfully")]
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status404NotFound, Description = "No user deleted / Error")]
+        #endregion
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _userService.DeleteUserAsync(id);
