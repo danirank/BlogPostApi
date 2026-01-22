@@ -1,4 +1,5 @@
-﻿using BlogPostApi.Data.Entities;
+﻿using BlogPostApi.Data.DTO;
+using BlogPostApi.Data.Entities;
 using BlogPostApi.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,15 +35,22 @@ namespace BlogPostApi.Data.Repos
             throw new NotImplementedException();
         }
 
-        public async Task<List<BlogPost>> GetAllPostsAsync()
+        public async Task<List<BlogPost>> GetPostsAsync(BlogPostSearchFilterDto filter)
         {
-            var posts = await _dbContext.BlogPosts
-                .Include(p => p.Category)
-                .Include(p => p.User)
-                .AsNoTracking()
-                .ToListAsync();
 
-            return posts;
+            var query = _dbContext.BlogPosts
+                .Include(c => c.Category)
+                .Include(u => u.User)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter.Title))
+                query = query.Where(bp => bp.Title.Contains(filter.Title));
+
+
+            if (!string.IsNullOrWhiteSpace(filter.Category))
+                query = query.Where(bp => bp.Category.CategoryName.Contains(filter.Category));
+
+            return await query.ToListAsync();
 
         }
 

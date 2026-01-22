@@ -1,4 +1,5 @@
-﻿using BlogPostApi.Data.Entities;
+﻿using BlogPostApi.Data.DTO;
+using BlogPostApi.Data.Entities;
 
 namespace BlogPostApi.Data.Interfaces
 {
@@ -6,7 +7,7 @@ namespace BlogPostApi.Data.Interfaces
     {
 
 
-        Task<List<BlogPost>> GetAllPostsAsync();
+        Task<List<BlogPost>> GetPostsAsync(BlogPostSearchFilterDto filter);
         Task<BlogPost> AddPostAsync(BlogPost post);
 
         Task<bool> DeletePostAsync(int id);

@@ -33,9 +33,9 @@ namespace BlogPostApi.Core.Services
 
         }
 
-        public async Task<ServiceResult<List<BlogPostsGetDto>>> GetAllPostsAsync()
+        public async Task<ServiceResult<List<BlogPostsGetDto>>> GetPostsAsync(BlogPostSearchFilterDto filter)
         {
-            var result = await _repo.GetAllPostsAsync();
+            var result = await _repo.GetPostsAsync(filter);
 
             var resDto = _mapper.Map<List<BlogPostsGetDto>>(result);
 

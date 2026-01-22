@@ -7,7 +7,7 @@ namespace BlogPostApi.Core.Interfaces
     {
         Task<ServiceResult<BlogPostAddResponseDto>> AddBlogPostAsync(BlogPostAddDto dto, string userId);
 
-        Task<ServiceResult<List<BlogPostsGetDto>>> GetAllPostsAsync();
+        Task<ServiceResult<List<BlogPostsGetDto>>> GetPostsAsync(BlogPostSearchFilterDto filter);
 
         Task<ServiceResult<BlogPostUpdateResponseDto>> UpdatePostAsync(BlogPostUpdateDto dto, int postId, string userId);
     }

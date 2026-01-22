@@ -20,9 +20,9 @@ namespace BlogPostApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            // Add services to the container.
 
-            //Hämtar från UserSecrets
+
+
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContext<AppDbContext>(options =>

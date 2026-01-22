@@ -19,11 +19,14 @@ namespace BlogPostApi.Controllers
             _service = service;
         }
 
-        #region
+        #region Get all Blogposts
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [SwaggerOperation(Summary = "Returns Blogpost in db",
+            Description = "Search by Title or Category(Both optional).")]
+        [ProducesResponseType(typeof(BlogPostsGetDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPosts([FromQuery] BlogPostSearchFilterDto filter)
         {
-            var result = await _service.GetAllPostsAsync();
+            var result = await _service.GetPostsAsync(filter);
 
             return Ok(result);
         }
@@ -36,8 +39,9 @@ namespace BlogPostApi.Controllers
         [Authorize]
         [HttpPost]
         [SwaggerOperation(
-            Summary = "Create a blog post.",
-            Description = "You have to be logged in to use this endpoint. Use the Login endpoint to create jwt token and paste in the authorize..."
+            Summary = "Create a new blog post.",
+            Description = "You have to be logged in to use this endpoint. " +
+            "Use the Login endpoint to create jwt token and paste in the authorize..."
             )]
         [ProducesResponseType(typeof(BlogPostAddResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, Description = "Check input")]
@@ -64,6 +68,15 @@ namespace BlogPostApi.Controllers
 
         [Authorize]
         [HttpPut]
+        [SwaggerOperation(
+            Summary = "Update a blogpost",
+            Description = "Only authorized user can acces this endpoint. " +
+            "Only user who created the post can update it. " +
+            "All fields are optional (titel, content, categoryId)"
+            )]
+        [ProducesResponseType(typeof(BlogPostUpdateResponseDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(UnauthorizedAccessException), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdatePost([FromBody] BlogPostUpdateDto dto, int blogPostId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
