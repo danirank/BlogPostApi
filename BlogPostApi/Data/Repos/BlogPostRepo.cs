@@ -30,9 +30,14 @@ namespace BlogPostApi.Data.Repos
             return await _dbContext.Categories.AnyAsync(c => c.CategoryId == categoryId);
         }
 
-        public Task<bool> DeletePostAsync(int id)
+        public async Task<bool> DeletePostAsync(BlogPost entity)
         {
-            throw new NotImplementedException();
+            var comments = _dbContext.Comments.Where(c => c.BlogPostId == entity.BlogPostId);
+            _dbContext.Comments.RemoveRange(comments);
+            _dbContext.Remove(entity);
+            var res = await _dbContext.SaveChangesAsync();
+
+            return res > 0 ? true : false;
         }
 
         public async Task<List<BlogPost>> GetPostsAsync(BlogPostSearchFilterDto filter)

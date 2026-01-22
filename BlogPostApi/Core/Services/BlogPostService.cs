@@ -33,6 +33,26 @@ namespace BlogPostApi.Core.Services
 
         }
 
+        public async Task<ServiceResult<string>> DeletePostAsync(int postId, string userId)
+        {
+            var entity = await _repo.GetPostByIdAsync(postId);
+
+            if (entity is null)
+                return ServiceResult<string>.Fail("Entity with id not found");
+
+            if (entity.UserId != userId)
+                return ServiceResult<string>.Fail("Cannot delete someone elses post");
+
+
+            var result = await _repo.DeletePostAsync(entity);
+
+            return result ?
+                 ServiceResult<string>.Ok("Entity deleted succesfully")
+                 : ServiceResult<string>.Fail("Something went wrong in repo");
+
+
+        }
+
         public async Task<ServiceResult<BlogPostsGetDetailsDto>> GetDetailedPostAsync(int id)
         {
             var result = await _repo.GetDetailedPostAsync(id);

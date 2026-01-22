@@ -10,7 +10,7 @@ namespace BlogPostApi.Data.Interfaces
         Task<List<BlogPost>> GetPostsAsync(BlogPostSearchFilterDto filter);
         Task<BlogPost> AddPostAsync(BlogPost post);
 
-        Task<bool> DeletePostAsync(int id);
+        Task<bool> DeletePostAsync(BlogPost entity);
 
         Task<BlogPost?> GetPostByIdAsync(int id);
 

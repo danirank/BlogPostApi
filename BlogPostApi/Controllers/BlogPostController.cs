@@ -129,7 +129,7 @@ namespace BlogPostApi.Controllers
         #region DeletePost
 
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete]
 
         #region Doc 
 
@@ -138,7 +138,7 @@ namespace BlogPostApi.Controllers
             Description = "Only authorized user can acces this endpoint. " +
             "Only user who created the post can delete it."
             )]
-        [ProducesResponseType(typeof(BlogPostUpdateResponseDto), StatusCodes.Status201Created)]
+
         [ProducesResponseType(typeof(UnauthorizedAccessException), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
 

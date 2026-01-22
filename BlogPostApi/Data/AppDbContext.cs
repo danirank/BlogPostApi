@@ -13,6 +13,22 @@ namespace BlogPostApi.Data
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
+
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // BlogPost -> Comments (CASCADE)
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.BlogPost)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(c => c.BlogPostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
         }
     }
 }
