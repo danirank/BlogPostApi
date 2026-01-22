@@ -1,0 +1,117 @@
+﻿using BlogPostApi.Core.Interfaces;
+using BlogPostApi.Core.Services;
+using BlogPostApi.Data.DTO;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+
+namespace BlogPostApi.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase
+    {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
+        #region Register
+
+        [HttpPost]
+        [SwaggerOperation(
+            Summary = "Register a new user",
+            Description = "Email, UserName and password are required, First name and last name are optional"
+            )]
+        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status201Created, Description = "User created succesfully")]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, Description = "Validation/Error")]
+
+        public async Task<IActionResult> Register(RegisterUserDto dto)
+        {
+            var result = await _userService.RegisterUserAsync(dto);
+
+            if (!result.Success || result.Data is null)
+                return BadRequest(result.ErrorMessages);
+
+
+            Response.Headers.Location = $"/api/users/{result.Data.Id}";
+            return StatusCode(201, new { User = result.Data, message = "User created succesfully" });
+
+        }
+
+
+        #endregion 
+
+
+        #region Update
+
+        [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary = "Update user by id (string)",
+            Description = "All fields are optional, (FirstName, LastName, Email, UserName, Password)"
+
+            )]
+        [ProducesResponseType(typeof(ServiceResult<UserResponseDto>), StatusCodes.Status200OK, Description = "User updated succesfully")]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest, Description = "Error / Bad request")]
+
+        public async Task<IActionResult> Update(string id, UpdateUserDto dto)
+        {
+            var result = await _userService.UpdateUserAsync(id, dto);
+
+            if (!result.Success)
+                return BadRequest(result.ErrorMessages);
+
+            return Ok(result);
+
+
+        }
+
+
+        #endregion
+
+
+        #region Delete
+        [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary = "Delete user by id (string)",
+            Description = "Deletes a user. Use an Id "
+
+            )]
+        [ProducesResponseType(StatusCodes.Status204NoContent, Description = "User deleted succesfully")]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status404NotFound, Description = "No user deleted / Error")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result.Success)
+                return NotFound(result.ErrorMessages);
+
+            return NoContent();
+
+        }
+
+        #endregion
+
+
+        #region LogIn
+        [SwaggerOperation(
+            Summary = "Login Endpoint",
+            Description = "Login by userName or Email"
+
+            )]
+        [ProducesResponseType(typeof(ServiceResult<LoginResponseDto>), StatusCodes.Status200OK, Description = "Logged in succesfully")]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status401Unauthorized, Description = "Error / Bad request")]
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginUserDto loginUserDto)
+        {
+            var result = await _userService.LoginAsync(loginUserDto);
+
+            return result.Success ? Ok(result) : Unauthorized(result.ErrorMessages);
+        }
+
+
+        #endregion
+    }
+}
