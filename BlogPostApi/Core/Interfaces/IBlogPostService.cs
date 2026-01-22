@@ -12,6 +12,7 @@ namespace BlogPostApi.Core.Interfaces
         Task<ServiceResult<BlogPostUpdateResponseDto>> UpdatePostAsync(BlogPostUpdateDto dto, int postId, string userId);
 
         Task<ServiceResult<BlogPostsGetDetailsDto>> GetDetailedPostAsync(int id);
+
         Task<ServiceResult<string>> DeletePostAsync(int postId, string userId);
     }
 }
