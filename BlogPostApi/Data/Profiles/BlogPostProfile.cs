@@ -36,7 +36,10 @@ namespace BlogPostApi.Data.Profiles
                 .ForMember(d => d.UserId, opt => opt.MapFrom(src => src.UserId));
 
 
-
+            CreateMap<BlogPost, BlogPostsGetDetailsDto>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(src => src.BlogPostId))
+                .ForMember(d => d.Category, opt => opt.MapFrom(src => src.Category.CategoryName))
+                .ForMember(d => d.UserName, opt => opt.MapFrom(src => src.User.UserName));
         }
 
 

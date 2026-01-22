@@ -12,8 +12,9 @@ namespace BlogPostApi.Data.Interfaces
 
         Task<bool> DeletePostAsync(int id);
 
-
         Task<BlogPost?> GetPostByIdAsync(int id);
+
+        Task<BlogPost?> GetDetailedPostAsync(int id);
 
         Task<bool> CategoryExists(int categoryId);
 

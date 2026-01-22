@@ -19,14 +19,29 @@ namespace BlogPostApi.Controllers
             _service = service;
         }
 
-        #region Get all Blogposts
+        #region GetBlogposts
         [HttpGet]
         [SwaggerOperation(Summary = "Returns Blogpost in db",
-            Description = "Search by Title or Category(Both optional).")]
+            Description = "Search by Title or Category (Both optional)")]
         [ProducesResponseType(typeof(BlogPostsGetDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetPosts([FromQuery] BlogPostSearchFilterDto filter)
         {
             var result = await _service.GetPostsAsync(filter);
+
+            return Ok(result);
+        }
+
+        #endregion
+
+
+        #region GetBlogPost
+        [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Returns a detailed blogpost",
+            Description = "Search bi Blogpost id")]
+        [ProducesResponseType(typeof(BlogPostsGetDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetBlogPost(int id)
+        {
+            var result = await _service.GetDetailedPostAsync(id);
 
             return Ok(result);
         }
@@ -64,7 +79,7 @@ namespace BlogPostApi.Controllers
         #endregion
 
 
-        #region Update
+        #region UpdateBlogPost
 
         [Authorize]
         [HttpPut]
@@ -96,6 +111,8 @@ namespace BlogPostApi.Controllers
 
 
         #endregion
+
+
 
     }
 }

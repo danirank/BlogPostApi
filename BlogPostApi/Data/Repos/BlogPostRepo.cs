@@ -41,7 +41,8 @@ namespace BlogPostApi.Data.Repos
             var query = _dbContext.BlogPosts
                 .Include(c => c.Category)
                 .Include(u => u.User)
-                .AsQueryable();
+                .AsQueryable()
+                .AsNoTracking();
 
             if (!string.IsNullOrWhiteSpace(filter.Title))
                 query = query.Where(bp => bp.Title.Contains(filter.Title));
@@ -56,14 +57,27 @@ namespace BlogPostApi.Data.Repos
 
         public async Task<BlogPost?> GetPostByIdAsync(int id)
         {
-            return await _dbContext.BlogPosts.Include(c => c.Category)
+            return await _dbContext.BlogPosts.AsNoTracking()
+                .Include(c => c.Category)
                 .FirstOrDefaultAsync(p => p.BlogPostId == id);
+        }
+
+        public async Task<BlogPost?> GetDetailedPostAsync(int id)
+        {
+            return await _dbContext.BlogPosts
+                .AsNoTracking()
+                .Include(c => c.Category)
+                .Include(u => u.User)
+                .Include(c => c.Comments).ThenInclude(u => u.User)
+                .SingleOrDefaultAsync(p => p.BlogPostId == id);
+
         }
 
         public async Task<int> SaveChangesAsync()
         {
             return await _dbContext.SaveChangesAsync();
         }
+
 
 
 

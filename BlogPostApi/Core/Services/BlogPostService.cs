@@ -33,6 +33,22 @@ namespace BlogPostApi.Core.Services
 
         }
 
+        public async Task<ServiceResult<BlogPostsGetDetailsDto>> GetDetailedPostAsync(int id)
+        {
+            var result = await _repo.GetDetailedPostAsync(id);
+            if (result is null)
+                return ServiceResult<BlogPostsGetDetailsDto>.Fail("No entity with id found");
+
+            // var dtoComments = _mapper.Map<List<CommentGetDto>>(result.Comments);
+
+            var resDto = _mapper.Map<BlogPostsGetDetailsDto>(result);
+
+            //resDto.Comments = dtoComments;
+
+            return ServiceResult<BlogPostsGetDetailsDto>.Ok(resDto);
+
+        }
+
         public async Task<ServiceResult<List<BlogPostsGetDto>>> GetPostsAsync(BlogPostSearchFilterDto filter)
         {
             var result = await _repo.GetPostsAsync(filter);
