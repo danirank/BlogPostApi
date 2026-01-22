@@ -12,7 +12,6 @@ namespace BlogPostApi.Core.Interfaces
         Task<ServiceResult<UserResponseDto>> UpdateUserAsync(string id, UpdateUserDto dto);
 
 
-        Task<ServiceResult<LoginResponseDto>> LoginAsync(LoginUserDto dto);
 
 
     }

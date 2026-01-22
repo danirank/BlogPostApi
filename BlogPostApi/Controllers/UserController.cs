@@ -94,24 +94,6 @@ namespace BlogPostApi.Controllers
         #endregion
 
 
-        #region LogIn
-        [SwaggerOperation(
-            Summary = "Login Endpoint",
-            Description = "Login by userName or Email"
 
-            )]
-        [ProducesResponseType(typeof(ServiceResult<LoginResponseDto>), StatusCodes.Status200OK, Description = "Logged in succesfully")]
-        [ProducesResponseType(typeof(List<string>), StatusCodes.Status401Unauthorized, Description = "Error / Bad request")]
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUserDto loginUserDto)
-        {
-            var result = await _userService.LoginAsync(loginUserDto);
-
-            return result.Success ? Ok(result) : Unauthorized(result.ErrorMessages);
-        }
-
-
-        #endregion
     }
 }

@@ -1,5 +1,7 @@
 ﻿using BlogPostApi.Core.Interfaces;
+using BlogPostApi.Data.DTO;
 using BlogPostApi.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,10 +12,37 @@ namespace BlogPostApi.Core.Services
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _config;
-
-        public AuthService(IConfiguration config)
+        private readonly UserManager<AppUser> _userManager;
+        public AuthService(IConfiguration config, UserManager<AppUser> userManager)
         {
             _config = config;
+            _userManager = userManager;
+        }
+
+
+
+        public async Task<ServiceResult<LoginResponseDto>> LoginAsync(LoginUserDto dto)
+        {
+            var userEntity = dto.UserNameOrEmail.Contains("@") ?
+                await _userManager.FindByEmailAsync(dto.UserNameOrEmail)
+                : await _userManager.FindByNameAsync(dto.UserNameOrEmail);
+
+            if (userEntity is null)
+                return ServiceResult<LoginResponseDto>.Fail(new List<string> { "User not found" });
+
+            var correctPassword = await _userManager.CheckPasswordAsync(userEntity, dto.PassWord);
+
+            if (!correctPassword)
+                return ServiceResult<LoginResponseDto>.Fail(new List<string> { "Wrong password" });
+
+
+            var token = await GenerateToken(userEntity);
+
+            return ServiceResult<LoginResponseDto>.Ok(new LoginResponseDto
+            {
+                Token = token
+            });
+
         }
 
         public async Task<string> GenerateToken(AppUser user)

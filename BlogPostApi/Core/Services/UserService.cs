@@ -95,37 +95,7 @@ namespace BlogPostApi.Core.Services
 
 
 
-        public async Task<ServiceResult<LoginResponseDto>> LoginAsync(LoginUserDto dto)
-        {
-            var userEntity = dto.UserNameOrEmail.Contains("@") ?
-                await _userManager.FindByEmailAsync(dto.UserNameOrEmail)
-                : await _userManager.FindByNameAsync(dto.UserNameOrEmail);
 
-            if (userEntity is null)
-                return ServiceResult<LoginResponseDto>.Fail(new List<string> { "User not found" });
-
-            var correctPassword = await _userManager.CheckPasswordAsync(userEntity, dto.PassWord);
-
-            if (!correctPassword)
-                return ServiceResult<LoginResponseDto>.Fail(new List<string> { "Wrong password" });
-
-
-
-
-            var token = await _authService.GenerateToken(userEntity);
-
-
-
-
-            return ServiceResult<LoginResponseDto>.Ok(new LoginResponseDto
-            {
-                Token = token
-            });
-
-
-
-
-        }
 
 
     }
