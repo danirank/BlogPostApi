@@ -12,8 +12,7 @@ namespace BlogPostApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-            //DI Via extension metoder som finns i Extensions/ServiceExtensions
+            //Srvices via extension metoder som finns i Extensions/ServiceExtensions
             builder.Services.AddDbContextExtension(builder);
 
             builder.Services.AddJwtAuth(builder);
