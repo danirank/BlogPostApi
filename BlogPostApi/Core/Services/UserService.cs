@@ -41,19 +41,19 @@ namespace BlogPostApi.Core.Services
             return ServiceResult<UserResponseDto>.Ok(response);
         }
 
-        //Delete - TODO: Delete byEmail?? 
+        //Delete
         public async Task<ServiceResult<string>> DeleteUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user is null)
-                return ServiceResult<string>.Fail(new List<string> { "User not found" });
+                return ServiceResult<string>.Fail("User not found");
 
             var result = await _userManager.DeleteAsync(user);
             var errors = result.Errors.Select(e => e.Description).ToList();
 
             return result.Succeeded
-                ? ServiceResult<string>.Ok(userId)
+                ? ServiceResult<string>.Ok("Deleted succesfully")
                 : ServiceResult<string>.Fail(errors);
 
 

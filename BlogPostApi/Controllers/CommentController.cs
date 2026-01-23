@@ -7,6 +7,7 @@ using System.Security.Claims;
 
 namespace BlogPostApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentController : ControllerBase
@@ -20,8 +21,9 @@ namespace BlogPostApi.Controllers
 
         #region AddComment
 
-        [Authorize]
+
         [HttpPost("{postId}")]
+        #region Doc
         [SwaggerOperation(
             Summary = "Make a comment on someone elses blogpost",
             Description = "You have to be logged in to use this endpoint. " +
@@ -31,6 +33,7 @@ namespace BlogPostApi.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Description = "Not Authorized")]
 
+        #endregion
         public async Task<IActionResult> AddComment(int postId, CommentAddDto dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

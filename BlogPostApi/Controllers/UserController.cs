@@ -95,7 +95,7 @@ namespace BlogPostApi.Controllers
             if (!result.Success)
                 return NotFound(result.ErrorMessages);
 
-            return NoContent();
+            return Ok(result.Data);
 
         }
 

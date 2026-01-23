@@ -6,19 +6,19 @@ namespace BlogPostApi.Data.DTO
     {
 
         [StringLength(50, MinimumLength = 2)]
-        public string? FirstName { get; set; } = null;
+        public string? FirstName { get; set; }
 
         [StringLength(50, MinimumLength = 2)]
-        public string? LastName { get; set; } = null;
+        public string? LastName { get; set; }
 
         [StringLength(30, MinimumLength = 3)]
-        public string? UserName { get; set; } = null;
+        public string? UserName { get; set; }
 
         [EmailAddress]
-        public string? Email { get; set; } = null;
+        public string? Email { get; set; }
 
         [StringLength(50, MinimumLength = 5)]
-        public string? Password { get; set; } = null;
+        public string? Password { get; set; }
     }
 
 }
