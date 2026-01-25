@@ -62,7 +62,7 @@ namespace BlogPostApi.Data.Repos
 
         public async Task<BlogPost?> GetPostByIdAsync(int id)
         {
-            return await _dbContext.BlogPosts.AsNoTracking()
+            return await _dbContext.BlogPosts
                 .Include(c => c.Category)
                 .FirstOrDefaultAsync(p => p.BlogPostId == id);
         }

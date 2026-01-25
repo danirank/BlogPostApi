@@ -22,7 +22,7 @@ namespace BlogPostApi.Controllers
         #region AddComment
 
 
-        [HttpPost("{postId}")]
+        [HttpPost]
         #region Doc
         [SwaggerOperation(
             Summary = "Make a comment on someone elses blogpost",

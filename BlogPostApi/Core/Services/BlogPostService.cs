@@ -23,9 +23,18 @@ namespace BlogPostApi.Core.Services
             var entity = _mapper.Map<BlogPost>(dto);
             entity.UserId = UserId;
 
-            var createdEntity = await _repo.AddPostAsync(entity);
+            var result = await _repo.AddPostAsync(entity);
+
+            if (result is null)
+                return ServiceResult<BlogPostAddResponseDto>.Fail("Failed adding post");
+
+            var createdEntity = await _repo.GetPostByIdAsync(result.BlogPostId);
+
+            if (createdEntity is null)
+                return ServiceResult<BlogPostAddResponseDto>.Fail("Failed adding post");
 
             var responseDto = _mapper.Map<BlogPostAddResponseDto>(createdEntity);
+            responseDto.Category = createdEntity.Category.CategoryName;
 
             return createdEntity is not null ?
                 ServiceResult<BlogPostAddResponseDto>.Ok(responseDto)

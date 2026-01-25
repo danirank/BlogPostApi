@@ -143,12 +143,12 @@ namespace BlogPostApi.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
 
         #endregion
-        public async Task<IActionResult> DeletePost(int postId)
+        public async Task<IActionResult> DeletePost(int blogPostId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
 
-            var result = await _service.DeletePostAsync(postId, userId);
+            var result = await _service.DeletePostAsync(blogPostId, userId);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
