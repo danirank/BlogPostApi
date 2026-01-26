@@ -34,12 +34,12 @@ namespace BlogPostApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Description = "Not Authorized")]
 
         #endregion
-        public async Task<IActionResult> AddComment(int postId, CommentAddDto dto)
+        public async Task<IActionResult> AddComment(int postId, [FromBody] CommentAddDto dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId is null)
-                return BadRequest("User not found");
+                return Unauthorized();
 
 
 
