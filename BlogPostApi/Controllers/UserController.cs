@@ -1,8 +1,10 @@
 ﻿using BlogPostApi.Core.Interfaces;
 using BlogPostApi.Core.Services;
 using BlogPostApi.Data.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace BlogPostApi.Controllers
 {
@@ -48,7 +50,8 @@ namespace BlogPostApi.Controllers
 
         #region Update
 
-        [HttpPut("{id}")]
+        [Authorize]
+        [HttpPut]
         #region Doc
         [SwaggerOperation(
             Summary = "Update user by id (string)",
@@ -59,8 +62,13 @@ namespace BlogPostApi.Controllers
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest, Description = "Error / Bad request")]
         #endregion
 
-        public async Task<IActionResult> Update(string id, UpdateUserDto dto)
+        public async Task<IActionResult> Update(UpdateUserDto dto)
         {
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (id is null)
+                return Unauthorized("Login to update");
+
             var result = await _userService.UpdateUserAsync(id, dto);
 
             if (!result.Success)
@@ -77,7 +85,7 @@ namespace BlogPostApi.Controllers
 
         #region Delete
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
 
         #region Doc
         [SwaggerOperation(
