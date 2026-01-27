@@ -43,10 +43,10 @@ namespace BlogPostApi.Controllers
 
         #region Doc
         [SwaggerOperation(Summary = "Returns a detailed blogpost",
-            Description = "Search bi Blogpost id")]
-        [ProducesResponseType(typeof(BlogPostsGetDto), StatusCodes.Status200OK)]
+            Description = "Search by Blogpost id")]
+        [ProducesResponseType(typeof(BlogPostsGetDetailsDto), StatusCodes.Status200OK)]
         #endregion
-        public async Task<IActionResult> GetBlogPost(int id)
+        public async Task<IActionResult> GetBlogPost([FromRoute] int id)
         {
             var result = await _service.GetDetailedPostAsync(id);
 
@@ -125,6 +125,7 @@ namespace BlogPostApi.Controllers
 
 
         #endregion
+
 
         #region DeletePost
 
